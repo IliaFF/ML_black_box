@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Dz5 ML — Хронология открытий</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0d1117;
+  color: #e6edf3;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  background: linear-gradient(135deg, #161b22, #21262d);
+  padding: 14px 32px;
+  border-bottom: 1px solid #30363d;
+  display: flex; align-items: center; gap: 16px;
+  flex-shrink: 0;
+}
+.page-header h1 { font-size: 18px; font-weight: 700; color: #f0f6fc; }
+.page-header .sub { font-size: 12px; color: #8b949e; margin-top: 2px; }
+.page-header .right { margin-left: auto; text-align: right; font-size: 12px; color: #8b949e; line-height: 1.6; }
+.page-header .right strong { font-size: 15px; }
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.timeline { display: flex; flex-direction: column; gap: 0; }
+
+.card {
+  display: flex;
+  gap: 0;
+  position: relative;
+}
+
+.card-left {
+  width: 48px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: #0d1117;
+  border: 2px solid var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 800;
+  flex-shrink: 0; z-index: 1;
+}
+
+.card-line {
+  width: 2px; flex: 1; min-height: 16px; opacity: 0.3;
+}
+
+.card:last-child .card-line { display: none; }
+
+.card-body {
+  flex: 1;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 14px 18px 12px;
+  margin: 0 0 10px 12px;
+}
+
+.card-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
+}
+
+.card-title {
+  font-size: 16px; font-weight: 700; color: #f0f6fc; flex: 1;
+}
+
+.badge {
+  font-size: 10px; padding: 2px 8px; border-radius: 10px; color: #fff;
+  white-space: nowrap; font-weight: 600;
+}
+
+.card-subtitle {
+  font-size: 12px; color: #8b949e; margin-bottom: 10px; line-height: 1.4;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 720px) {
+  .two-col { grid-template-columns: 1fr; }
+}
+
+.block-label {
+  font-size: 10px; font-weight: 700; color: #484f58;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: 5px;
+}
+
+.card-formula {
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 2.0;
+  overflow-x: auto;
+  height: 100%;
+  font-family: 'Cambria Math', 'Georgia', 'Times New Roman', serif;
+  color: #e6edf3;
+}
+
+.math-block {
+  color: #e6edf3;
+}
+
+.card-algo {
+  background: #111820;
+  border: 1px solid #1c2535;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #79c0ff;
+  line-height: 1.8;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  height: 100%;
+}
+
+.card-footer {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.rmse-chip {
+  font-size: 13px; font-weight: 700;
+  border: 1.5px solid;
+  border-radius: 6px;
+  padding: 2px 10px;
+  background: rgba(255,255,255,0.04);
+  white-space: nowrap;
+}
+
+.params-note {
+  font-size: 11px; color: #6e7681;
+}
+
+.card-note {
+  font-size: 11px; color: #6e7681;
+  border-top: 1px solid #21262d;
+  padding-top: 6px;
+  margin-top: 4px;
+  line-height: 1.5;
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div>
+    <h1>🔬 Хронология открытий &mdash; Dz5 ML</h1>
+    <div class="sub">13 дней &nbsp;&middot;&nbsp; 345 скриптов &nbsp;&middot;&nbsp; 130+ семейств формул &nbsp;&middot;&nbsp; активная зона: 29K строк</div>
+  </div>
+  <div class="right">
+    OOF RMSE финал: <strong style="color:#3fb950">1.420</strong><br>
+    Kaggle: <strong style="color:#f0883e">88.735 &nbsp;&middot;&nbsp; 1-е место</strong>
+  </div>
+</div>
+
+<div class="main">
+  <div class="timeline">
+
+<div class="card" style="--accent:#f0883e">
+  <div class="card-left">
+    <div class="card-num" style="color:#f0883e">1</div>
+    <div class="card-line" style="background:#f0883e"></div>
+  </div>
+  <div class="card-body">
+    <div class="card-header">
+      <div class="card-title">Угловой синус</div>
+      <span class="badge" style="background:#238636">✓ выполнено</span>
+    </div>
+    <div class="card-subtitle">Базовая осцилляция по Черенковскому углу θ</div>
+
+    <div class="two-col">
+      <div>
+        <div class="block-label">📐 Формула / модель</div>
+        <div class="card-formula"><div class="math-block">y ≈ A · sin(k<sub>1</sub> · θ)</div></div>
+      </div>
+      <div>
+        <div class="block-label">⚙️ Алгоритм</div>
+        <div class="card-algo">Nelder-Mead · scipy.minimize · ручная аналитика</div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="rmse-chip" style="border-color:#f0883e;color:#f0883e">
+        RMSE ≈ ≈ 88
+      </span>
+      <span class="params-note">k₁ = 2.5000 (точно) · подтверждено через скан при μ=const</span>
+    </div>
+    <div class="card-note">На pooled-выборке R²≈0.0003 — не работало. Нашли через локальный срез при фиксированном μ.</div>
+  </div>
+</div>
+
+<div class="card" style="--accent:#58a6ff">
+  <div class="card-left">
+    <div class="card-num" style="color:#58a6ff">2</div>
+    <div class="card-line" style="background:#58a6ff"></div>
+  </div>
+  <div class="card-body">
+    <div class="card-header">
+      <div class="card-title">Полюса по muon_flux</div>
+      <span class="badge" style="background:#238636">✓ выполнено</span>
+    </div>
+    <div class="card-subtitle">Брейт-Вигнер резонансы F(μ) и H(μ)</div>
+
+    <div class="two-col">
+      <div>
+        <div class="block-label">📐 Формула / модель</div>
+        <div class="card-formula"><div class="math-block">F<sub>v</sub>(μ) = A<sub>bw</sub> · μ² / ( (|μ| − a<sub>bw</sub>)² + g<sub>W</sub>² )<br>H<sub>v</sub>(μ) = A<sub>H</sub> · [ 1/((μ−m<sub>H</sub>)²+g<sub>H</sub>²) − 1/((μ+m<sub>H</sub>)²+g<sub>H</sub>²) ]</div></div>
+      </div>
+      <div>
+        <div class="block-label">⚙️ Алгоритм</div>
+        <div class="card-algo">curve_fit (scipy) · Powell polish · аналитика по скан-данным</div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="rmse-chip" style="border-color:#58a6ff;color:#58a6ff">
+        RMSE ≈ 78.0
+      </span>
+      <span class="params-note">Пик F: |μ|≈9.05, R²=0.9978 · Пик H: μ≈7.69, R²=0.9990 · на чистых строках (tc=0, db=0)</span>
+    </div>
+    <div class="card-note">Выведено из 1-D сканов y при фиксированных θ, tc=0. F(μ)·sin(θ) объяснил clean-zone целиком.</div>
+  </div>
+</div>
+
+<div class="card" style="--accent:#d2a8ff">
+  <div class="card-left">
+    <div class="card-num" style="color:#d2a8ff">3</div>
+    <div class="card-line" style="background:#d2a8ff"></div>
+  </div>
+  <div class="card-body">
+    <div class="card-header">
+      <div class="card-title">Локальность и шумовые зоны</div>
+      <span class="badge" style="background:#238636">✓ выполнено</span>
+    </div>
+    <div class="card-subtitle">G_clip — мягкие пороговые ворота по всем 12 gate-фичам</div>
+
+    <div class="two-col">
+      <div>
+        <div class="block-label">📐 Формула / модель</div>
+        <div class="card-formula"><div class="math-block">G<sub>clip</sub>(x) = clip(10 − |x|, 0, 1)<br>y = core(μ,θ,tc) · G(μ)·G(θ)·G(db)·∏G(gate<sub>i</sub>)</div></div>
+      </div>
+      <div>
+        <div class="block-label">⚙️ Алгоритм</div>
+        <div class="card-algo">Анализ EDA · SHAP-диагностика · бинарный бенчмарк gate-кандидатов</div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="rmse-chip" style="border-color:#d2a8ff;color:#d2a8ff">
+        RMSE ≈ 53.8
+      </span>
+      <span class="params-note">Все 11 не-физических фич — чистые gate с порогом ±9.5 · Активная зона: max|feat|<9</span>
+    </div>
+    <div class="card-note">84% активной зоны — 'грязные' строки (tc≠0 или db<−8). Обнаружено через режимный анализ.</div>
+  </div>
+</div>
+
+<div class="card" style="--accent:#79c0ff">
+  <div class="card-left">
+    <div class="card-num" style="color:#79c0ff">4</div>
+    <div class="card-line" style="background:#79c0ff"></div>
+  </div>
+  <div class="card-body">
+    <div class="card-header">
+      <div class="card-title">tc-модуляция через косинус</div>
+      <span class="badge" style="background:#238636">✓ выполнено</span>
+    </div>
+    <div class="card-subtitle">Структурное открытие: G_tc = cos(tc²/β) через скан при μ=0</div>
+
+    <div class="two-col">
+      <div>
+        <div class="block-label">📐 Формула / модель</div>
+        <div class="card-formula"><div class="math-block">cos<sub>c</sub> = cos(k<sub>2</sub>·μ + tc²/β<sub>tc</sub>)<br>y = [ F<sub>v</sub>·sin + H<sub>v</sub> + g<sub>θ</sub>·cos<sub>c</sub> + μ·tc·C(θ) ] · G<sub>main</sub></div></div>
+      </div>
+      <div>
+        <div class="block-label">⚙️ Алгоритм</div>
+        <div class="card-algo">API-скан блок F: μ=0, θ=−8.5, tc∈[−10,10] · curve_fit на cos-базисе</div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="rmse-chip" style="border-color:#79c0ff;color:#79c0ff">
+        RMSE ≈ 36.7
+      </span>
+      <span class="params-note">k₂≈1.80 · β_tc≈10 · Скан RMSE=0.0014 при μ=0</span>
+    </div>
+    <div class="card-note">До открытия: валидация на holdout дала RMSE=266 — структурный баг. После фикса Model J вышел на 36.73.</div>
+  </div>
+</div>
+
+<div class="card" style="--accent:#56d364">
+  <div class="card-left">
+    <div class="card-num" style="color:#56d364">5</div>
+    <div class="card-line" style="background:#56d364"></div>
+  </div>
+  <div class="card-body">
+    <div class="card-header">
+      <div class="card-title">Угловая коррекция и tc-связка</div>
+      <span class="badge" style="background:#238636">✓ выполнено</span>
+    </div>
+    <div class="card-subtitle">g_θ(θ) — рациональная функция · C(θ) — коэффициент при μ·tc</div>
+
+    <div class="two-col">
+      <div>
+        <div class="block-label">📐 Формула / модель</div>
+        <div class="card-formula"><div class="math-block">g<sub>θ</sub>(θ&lt;0) = A<sub>T</sub>·θ·(θ−t<sub>z</sub>) / ((θ−t<sub>H</sub>)²+g<sub>T</sub>²) + B<sub>T</sub>·θ·e<sup>−e<sub>T</sub>(θ−c<sub>T</sub>)²</sup><br>g<sub>θ</sub>(θ≥0) = B<sub>T+</sub>·θ·e<sup>−e<sub>T+</sub>(θ−c<sub>T+</sub>)²</sup><br>C<sub>−</sub>(θ) = C<sub>0n</sub> + A<sub>n</sub>·sinh(k<sub>2</sub>|θ|/n) + D<sub>n</sub>·θ·e<sup>−e<sub>n</sub>(θ−c<sub>n</sub>)²</sup></div></div>
+      </div>
+      <div>
+        <div class="block-label">⚙️ Алгоритм</div>
+        <div class="card-algo">API-скан 107 точек по θ · scipy curve_fit · Nelder-Mead 3 старта</div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="rmse-chip" style="border-color:#56d364;color:#56d364">
+        RMSE ≈ 9.5
+      </span>
+      <span class="params-note">21 параметр (Model N) · Скан RMSE C(θ): 0.024</span>
+    </div>
+    <div class="card-note">RMSE < 10 milestone. C(θ) найдено через плотный скан при μ=0, θ∈[−9,9], tc∈[−9,9].</div>
+  </div>
+</div>
+
+<div class="card" style="--accent:#e3b341">
+  <div class="card-left">
+    <div class="card-num" style="color:#e3b341">6</div>
+    <div class="card-line" style="background:#e3b341"></div>
+  </div>
+  <div class="card-body">
+    <div class="card-header">
+      <div class="card-title">Экспоненциальные поправки</div>
+      <span class="badge" style="background:#238636">✓ выполнено</span>
+    </div>
+    <div class="card-subtitle">Гауссовы члены в C_neg/C_pos, свободная ветка θ≥0 для g_θ</div>
+
+    <div class="two-col">
+      <div>
+        <div class="block-label">📐 Формула / модель</div>
+        <div class="card-formula"><div class="math-block">C<sub>−</sub> += D<sub>n2</sub>·θ·e<sup>−e<sub>n2</sub>(θ−c<sub>n2</sub>)²</sup><br>C<sub>+</sub>(θ) = C<sub>0p</sub> + A<sub>c</sub>·sinh(k<sub>2</sub>θ/n<sub>c</sub>) + B<sub>c</sub>·θ·e<sup>−c<sub>c</sub>θ²</sup> + D<sub>p</sub>·θ·e<sup>−e<sub>p</sub>(θ−c<sub>p</sub>)²</sup> + D<sub>p2</sub>·θ·e<sup>…</sup><br>F<sub>v</sub> · (1 + α<sub>F</sub>·tc²)  ← малая tc²-поправка амплитуды</div></div>
+      </div>
+      <div>
+        <div class="block-label">⚙️ Алгоритм</div>
+        <div class="card-algo">Nelder-Mead 5 стартов × 100K итераций + Powell polish · 44 параметра</div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="rmse-chip" style="border-color:#e3b341;color:#e3b341">
+        RMSE ≈ 8.67
+      </span>
+      <span class="params-note">Model O→U · K4 → N: скан RMSE C_neg 0.137 → 0.024</span>
+    </div>
+    <div class="card-note">Ветка θ≥0 для g_θ и C_pos развивалась независимо от θ<0. 44 итоговых параметра.</div>
+  </div>
+</div>
+
+<div class="card" style="--accent:#3fb950">
+  <div class="card-left">
+    <div class="card-num" style="color:#3fb950">7</div>
+    <div class="card-line" style="background:#3fb950"></div>
+  </div>
+  <div class="card-body">
+    <div class="card-header">
+      <div class="card-title">Поправка бустингом</div>
+      <span class="badge" style="background:#238636">✓ выполнено</span>
+    </div>
+    <div class="card-subtitle">LGBM на остатках формулы — 3 фичи → потом 16 компонент формулы</div>
+
+    <div class="two-col">
+      <div>
+        <div class="block-label">📐 Формула / модель</div>
+        <div class="card-formula"><div class="math-block">ŷ = formula<sub>V2</sub>(μ,θ,tc,g<sub>m</sub>) + LGBM(features; residuals)<br><br>features<sub>v1</sub>: [μ, θ, tc]  → OOF 2.44<br>features<sub>v2</sub>: [F<sub>v</sub>, H<sub>v</sub>, g<sub>θ</sub>, cos<sub>c</sub>, C<sub>v</sub>, sin<sub>θ</sub>, tc², tc·μ, …]  → OOF 1.72</div></div>
+      </div>
+      <div>
+        <div class="block-label">⚙️ Алгоритм</div>
+        <div class="card-algo">LightGBM · 10-fold CV · early stopping patience=300<br>Grid search: 16 конфигов (num_leaves × λ × min_child)</div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="rmse-chip" style="border-color:#3fb950;color:#3fb950">
+        RMSE ≈ 1.72
+      </span>
+      <span class="params-note">16 компонент формулы = чистый сигнал. Размер деревьев: leaves=63 λ=20</span>
+    </div>
+    <div class="card-note">Главный прорыв: использовать выходы формулы (Fv, Hv, gt…) как признаки LGBM, а не сырые фичи.</div>
+  </div>
+</div>
+
+<div class="card" style="--accent:#ffa657">
+  <div class="card-left">
+    <div class="card-num" style="color:#ffa657">8</div>
+    <div class="card-line" style="background:#ffa657"></div>
+  </div>
+  <div class="card-body">
+    <div class="card-header">
+      <div class="card-title">10-fold + Optuna + zone features</div>
+      <span class="badge" style="background:#238636">✓ выполнено</span>
+    </div>
+    <div class="card-subtitle">Тюнинг гиперпараметров и зональные признаки</div>
+
+    <div class="two-col">
+      <div>
+        <div class="block-label">📐 Формула / модель</div>
+        <div class="card-formula"><div class="math-block">zone_feat = [⌊θ⌋, ⌊|tc|/2⌋, |tc|&gt;5, |tc|&gt;7, |μ|&gt;7, θ≥0, ⌊|μ|/3⌋]<br>total: 23 features = 16 formula-comp + 7 zone<br><br>Optuna TPE · 150 trials:<br>num_leaves=16, lr=0.019, λ=1.39, colsample=0.45</div></div>
+      </div>
+      <div>
+        <div class="block-label">⚙️ Алгоритм</div>
+        <div class="card-algo">Optuna (TPE sampler) · 150 trials · LightGBM · 10-fold OOF</div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="rmse-chip" style="border-color:#ffa657;color:#ffa657">
+        RMSE ≈ 1.435
+      </span>
+      <span class="params-note">Мелкие деревья (leaves=16) + zone-фичи — работает только вместе</span>
+    </div>
+    <div class="card-note">Exp6(v3): tc³ и BW-дистанции дали хуже (2.47) — сигнал, не шум. Pseudo-labels: OOF хорош, Kaggle хуже.</div>
+  </div>
+</div>
+
+<div class="card" style="--accent:#a5d6ff">
+  <div class="card-left">
+    <div class="card-num" style="color:#a5d6ff">9</div>
+    <div class="card-line" style="background:#a5d6ff"></div>
+  </div>
+  <div class="card-body">
+    <div class="card-header">
+      <div class="card-title">Итеративное уточнение формулы ↔ LGBM</div>
+      <span class="badge" style="background:#238636">✓ выполнено</span>
+    </div>
+    <div class="card-subtitle">Переобучение формулы на (y − lgbm_oof), затем LGBM заново</div>
+
+    <div class="two-col">
+      <div>
+        <div class="block-label">📐 Формула / модель</div>
+        <div class="card-formula"><div class="math-block"><b>for</b> iter in [1, 2, …]:<br>&nbsp;&nbsp;1. formula_params = NM+Powell( y − lgbm<sub>oof</sub> )<br>&nbsp;&nbsp;2. lgbm<sub>folds</sub> = train<sub>10fold</sub>( y − formula(x) )<br>&nbsp;&nbsp;3. OOF = RMSE(y, formula + lgbm<sub>oof</sub>)<br>&nbsp;&nbsp;<b>stop</b> when OOF not improved</div></div>
+      </div>
+      <div>
+        <div class="block-label">⚙️ Алгоритм</div>
+        <div class="card-algo">Nelder-Mead 5 стартов + Powell (iter 1: 6 мин, iter 2: 6.2 мин) · LightGBM 10-fold</div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="rmse-chip" style="border-color:#a5d6ff;color:#a5d6ff">
+        RMSE ≈ 1.420
+      </span>
+      <span class="params-note">Iter1: 1.4346 → 1.4199 (+0.015) · Iter2: 1.4206 — хуже, стоп</span>
+    </div>
+    <div class="card-note">Итерация 1 помогла. Итерация 2 нет — модель достигла баланса. Финальная модель — iter 1.</div>
+  </div>
+</div>
+
+<div class="card" style="--accent:#88e987">
+  <div class="card-left">
+    <div class="card-num" style="color:#88e987">10</div>
+    <div class="card-line" style="background:#88e987"></div>
+  </div>
+  <div class="card-body">
+    <div class="card-header">
+      <div class="card-title">Порог активной зоны 9.07 вместо 9.0</div>
+      <span class="badge" style="background:#238636">✓ выполнено</span>
+    </div>
+    <div class="card-subtitle">Поиск оптимального порога через submission на Kaggle</div>
+
+    <div class="two-col">
+      <div>
+        <div class="block-label">📐 Формула / модель</div>
+        <div class="card-formula"><div class="math-block">active = { x : max<sub>i</sub>|x<sub>i</sub>| &lt; threshold }<br>threshold* = argmin<sub>t ∈ [9.0, 9.1]</sub> Kaggle_score(t)<br><br>7 submissions: 9.0 / 9.05 / 9.065 / <b>9.07</b> / 9.075 / 9.08 / 9.1<br>active test rows at 9.07: <b>91 685</b></div></div>
+      </div>
+      <div>
+        <div class="block-label">⚙️ Алгоритм</div>
+        <div class="card-algo">Grid search по Kaggle submissions · 7 значений порога</div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <span class="rmse-chip" style="border-color:#88e987;color:#88e987">
+        Kaggle ≈ 88.735
+      </span>
+      <span class="params-note">Оптимум: threshold = 9.07 · активных тест-строк: 91 685</span>
+    </div>
+    <div class="card-note">Kaggle score: 88.735 · 1-е место. Финал: submission_zone_opt_907.csv</div>
+  </div>
+</div>
+  </div>
+</div>
+
+</body>
+</html>

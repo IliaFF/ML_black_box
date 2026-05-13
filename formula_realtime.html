@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Formula V2 — Real-Time Explorer</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0d1117; color: #e6edf3;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+}
+
+/* ── header ── */
+.header {
+  background: linear-gradient(135deg, #161b22, #21262d);
+  padding: 9px 18px;
+  border-bottom: 1px solid #30363d;
+  display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+}
+.header h1 { font-size: 14px; font-weight: 600; color: #f0f6fc; }
+.badge { background: #238636; color: #fff; font-size: 10px;
+         padding: 2px 8px; border-radius: 12px; }
+.info { font-size: 11px; color: #8b949e; margin-left: auto; }
+#perf { font-size: 11px; color: #484f58; margin-left: 14px; }
+
+/* ── global slider bar ── */
+.slider-bar {
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+  padding: 10px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.sl-group {
+  display: flex; align-items: center; gap: 8px;
+}
+.sl-lbl {
+  font-size: 13px; font-weight: 700;
+  white-space: nowrap; width: 26px; text-align: right; flex-shrink: 0;
+}
+.sl-lbl.mu    { color: #f0883e; }
+.sl-lbl.theta { color: #58a6ff; }
+.sl-lbl.tc    { color: #3fb950; }
+.sl-wrap { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+input[type=range] {
+  width: 100%; height: 6px; cursor: pointer;
+  background: #30363d; border-radius: 3px; outline: none;
+}
+input[type=range].mu    { accent-color: #f0883e; }
+input[type=range].theta { accent-color: #58a6ff; }
+input[type=range].tc    { accent-color: #3fb950; }
+.ticks { display: flex; justify-content: space-between;
+         font-size: 10px; color: #484f58; }
+.sl-val {
+  font-size: 14px; font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  width: 48px; text-align: right; flex-shrink: 0;
+}
+.sl-val.mu    { color: #f0883e; }
+.sl-val.theta { color: #58a6ff; }
+.sl-val.tc    { color: #3fb950; }
+
+/* ── 3 charts ── */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  flex: 1; min-height: 0;
+}
+.chart-col {
+  display: flex; flex-direction: column;
+  border-right: 1px solid #21262d;
+  overflow: hidden;
+}
+.chart-col:last-child { border-right: none; }
+.chart-title {
+  background: #161b22;
+  font-size: 12px; font-weight: 600; color: #c9d1d9;
+  text-align: center;
+  padding: 6px 8px;
+  border-bottom: 1px solid #21262d;
+  flex-shrink: 0;
+}
+.chart-title .dot {
+  display: inline-block; width: 8px; height: 8px;
+  border-radius: 50%; margin-right: 5px; vertical-align: middle;
+}
+.plot-div { flex: 1; min-height: 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>&#x1F4CA; Formula V2 &mdash; Real-Time Explorer</h1>
+  <span class="badge">JS formula</span>
+  <div class="info">
+    Grid: <strong>150 &times; 150</strong>
+    &nbsp;|&nbsp; range [&minus;11, 11]
+    &nbsp;|&nbsp; 3 surfaces update simultaneously
+  </div>
+  <span id="perf">ready</span>
+</div>
+
+<!-- ── global sliders ── -->
+<div class="slider-bar">
+
+  <div class="sl-group">
+    <span class="sl-lbl mu">&mu;</span>
+    <div class="sl-wrap">
+      <input type="range" class="mu" id="sl-mu" min="-220" max="220" value="0" step="1">
+      <div class="ticks"><span>-11</span><span>-5</span><span>0</span><span>5</span><span>11</span></div>
+    </div>
+    <span class="sl-val mu" id="v-mu">0.00</span>
+  </div>
+
+  <div class="sl-group">
+    <span class="sl-lbl theta">&theta;</span>
+    <div class="sl-wrap">
+      <input type="range" class="theta" id="sl-theta" min="-220" max="220" value="0" step="1">
+      <div class="ticks"><span>-11</span><span>-5</span><span>0</span><span>5</span><span>11</span></div>
+    </div>
+    <span class="sl-val theta" id="v-theta">0.00</span>
+  </div>
+
+  <div class="sl-group">
+    <span class="sl-lbl tc">tc</span>
+    <div class="sl-wrap">
+      <input type="range" class="tc" id="sl-tc" min="-220" max="220" value="0" step="1">
+      <div class="ticks"><span>-11</span><span>-5</span><span>0</span><span>5</span><span>11</span></div>
+    </div>
+    <span class="sl-val tc" id="v-tc">0.00</span>
+  </div>
+
+</div>
+
+<!-- ── 3 charts ── -->
+<div class="charts-row">
+
+  <div class="chart-col">
+    <div class="chart-title">
+      <span class="dot" style="background:#3fb950"></span>
+      y(&mu;, &theta;) &mdash; <span style="color:#3fb950">tc fixed</span>
+    </div>
+    <div class="plot-div" id="p0"></div>
+  </div>
+
+  <div class="chart-col">
+    <div class="chart-title">
+      <span class="dot" style="background:#58a6ff"></span>
+      y(&mu;, tc) &mdash; <span style="color:#58a6ff">&theta; fixed</span>
+    </div>
+    <div class="plot-div" id="p1"></div>
+  </div>
+
+  <div class="chart-col">
+    <div class="chart-title">
+      <span class="dot" style="background:#f0883e"></span>
+      y(&theta;, tc) &mdash; <span style="color:#f0883e">&mu; fixed</span>
+    </div>
+    <div class="plot-div" id="p2"></div>
+  </div>
+
+</div>
+
+<script>
+const P = [100.65263909012971, 9.663616403464925, 1.4443095539769313, 269.79827105743055, 9.289874005645217, 1.2859414460309735, 350.53441362505436, -4.042437175868336, -11.031758517736828, 1.8216815620119002, -10.554473502046344, 0.061509832641303906, -1.7752430692624532, 0.30146192824001933, 0.47941661042205175, 3.9860106390253236, -0.07191038621600632, 1.5567838823503783, -6.095634511395874, 0.35267303859199306, 0.156402887441348, -0.25688056832957823, 0.21553912727971092, 0.3769999390436774, 3.7306165334406924, 0.8663007140659852, 0.2684761941307627, -0.6828008892221666, 1.7193521614759475, 0.5297702857268238, 1.7999525706153632, 5.235767056477067e-05, 2.50002228616747, 27.616811000747678, 1.4007210681003033, -0.43407936786251444, 9.999628274574908, -1.6583035529354066e-05, -773.7372827585042, 1.5004399500972365, 0.0500000000000014, -0.038948239001619284, 3.521309324599015, 5.737988341520746];
+
+const GRID_SIZE = 150;
+const RANGE_MIN = -11;
+const RANGE_MAX =  11;
+
+function sliderToVal(s) { return s / 20; }  // step=1 → 0.05 units
+
+const AXIS = new Float64Array(GRID_SIZE);
+for (let i = 0; i < GRID_SIZE; i++)
+    AXIS[i] = RANGE_MIN + (RANGE_MAX - RANGE_MIN) * i / (GRID_SIZE - 1);
+const AXIS_ARR = Array.from(AXIS);
+
+// ── Formula V2 ───────────────────────────────────────────────────────────────
+function G_clip(x) {
+    const v = 10 - Math.abs(x);
+    return v < 0 ? 0.0 : v > 1 ? 1.0 : v;
+}
+
+function predict_v2(mu, theta, tc) {
+    const A_bw=P[0],  a_bw=P[1],  gW=P[2];
+    const AH=P[3],    mH=P[4],    gH=P[5];
+    const AT=P[6],    tz=P[7],    tH=P[8],    gT=P[9];
+    const BT=P[10],   eT=P[11],   cT=P[12];
+    const C0n=P[13],  An=P[14],   nn=P[15];
+    const Dn=P[16],   en=P[17],   cn=P[18];
+    const Dn2=P[19],  en2=P[20],  cn2=P[21];
+    const C0p=P[22],  Ac=P[23],   nc=P[24];
+    const Bc=P[25],   cc=P[26];
+    const Dp=P[27],   ep=P[28],   cp=P[29];
+    const k2=P[30],   alpha_F=P[31], k1=P[32];
+    const BT_pos=P[33], eT_pos=P[34], cT_pos=P[35];
+    const beta_tc=P[36];
+    const AT_pos=P[37], tz_pos=P[38], tH_pos=P[39], gT_pos=P[40];
+    const Dp2=P[41],  ep2=P[42],  cp2=P[43];
+
+    const absMu  = Math.abs(mu);
+    const absThe = Math.abs(theta);
+    const Fv = A_bw * mu * mu / ((absMu - a_bw) ** 2 + gW * gW);
+    const Hv = AH * (1 / ((mu - mH) ** 2 + gH * gH)
+                   - 1 / ((mu + mH) ** 2 + gH * gH));
+    let gt;
+    if (theta < 0) {
+        gt = AT * theta * (theta - tz) / ((theta - tH) ** 2 + gT * gT)
+           + BT * theta * Math.exp(-eT * (theta - cT) ** 2);
+    } else {
+        gt = AT_pos * theta * (theta - tz_pos) / ((theta - tH_pos) ** 2 + gT_pos * gT_pos)
+           + BT_pos * theta * Math.exp(-eT_pos * (theta - cT_pos) ** 2);
+    }
+    let Cv;
+    if (theta < 0) {
+        Cv = C0n
+           + An  * Math.sinh(k2 * absThe / nn)
+           + Dn  * theta * Math.exp(-en  * (theta - cn ) ** 2)
+           + Dn2 * theta * Math.exp(-en2 * (theta - cn2) ** 2);
+    } else {
+        Cv = C0p
+           + Ac  * Math.sinh(k2 * theta / nc)
+           + Bc  * theta * Math.exp(-cc * theta * theta)
+           + Dp  * theta * Math.exp(-ep  * (theta - cp ) ** 2)
+           + Dp2 * theta * Math.exp(-ep2 * (theta - cp2) ** 2);
+    }
+    const sin_th = Math.sin(k1 * theta);
+    const cos_c  = Math.cos(k2 * mu + tc * tc / beta_tc);
+    const core   = Fv * (1 + alpha_F * tc * tc) * sin_th
+                 + Hv + gt * cos_c + mu * tc * Cv;
+    return core * G_clip(mu) * G_clip(theta) * G_clip(tc);
+}
+
+// ── Surface / probe helpers ───────────────────────────────────────────────────
+// pair 0: y(mu, theta) fixed=tc   x=mu   y=theta
+// pair 1: y(mu, tc)    fixed=theta x=mu  y=tc
+// pair 2: y(theta, tc) fixed=mu   x=theta y=tc
+function computeZ(pair, mu, theta, tc) {
+    const z = new Array(GRID_SIZE);
+    for (let i = 0; i < GRID_SIZE; i++) {
+        const row = new Float64Array(GRID_SIZE);
+        const a1 = AXIS[i];
+        for (let j = 0; j < GRID_SIZE; j++) {
+            const a2 = AXIS[j];
+            if      (pair === 0) row[j] = predict_v2(a1,  a2,    tc);
+            else if (pair === 1) row[j] = predict_v2(a1,  theta, a2);
+            else                 row[j] = predict_v2(mu,  a1,    a2);
+        }
+        z[i] = row;
+    }
+    return z;
+}
+
+function estimateVmax(z) {
+    const step = Math.max(1, Math.floor(GRID_SIZE / 20));
+    const sample = [];
+    for (let i = 0; i < GRID_SIZE; i += step)
+        for (let j = 0; j < GRID_SIZE; j += step)
+            sample.push(Math.abs(z[i][j]));
+    sample.sort((a, b) => a - b);
+    return Math.max(sample[Math.floor(sample.length * 0.97)], 1.0);
+}
+
+function probeXYZ(pair, mu, theta, tc) {
+    const yv = predict_v2(mu, theta, tc);
+    if (pair === 0) return [[mu],    [theta], [yv]];
+    if (pair === 1) return [[mu],    [tc],    [yv]];
+    else            return [[theta], [tc],    [yv]];
+}
+
+// ── Plotly init ───────────────────────────────────────────────────────────────
+const LABELS = [
+    { xt: 'mu',    yt: 'theta' },
+    { xt: 'mu',    yt: 'tc'    },
+    { xt: 'theta', yt: 'tc'    },
+];
+
+function makeLayout(xt, yt) {
+    return {
+        paper_bgcolor: '#0d1117',
+        plot_bgcolor:  '#161b22',
+        margin: { l: 0, r: 0, t: 0, b: 0 },
+        scene: {
+            bgcolor: '#161b22',
+            xaxis: { title: xt,  color: '#8b949e', gridcolor: '#21262d',
+                     range: [RANGE_MIN, RANGE_MAX] },
+            yaxis: { title: yt,  color: '#8b949e', gridcolor: '#21262d',
+                     range: [RANGE_MIN, RANGE_MAX] },
+            zaxis: { title: 'y', color: '#8b949e', gridcolor: '#21262d' },
+            camera: { eye: { x: 1.4, y: 1.4, z: 0.85 } },
+        },
+    };
+}
+
+// Global state: single set of values
+let gMu = 0.0, gTheta = 0.0, gTc = 0.0;
+
+function initPlot(ci) {
+    const { xt, yt } = LABELS[ci];
+    const z = computeZ(ci, gMu, gTheta, gTc);
+    const vmax = estimateVmax(z);
+    const [px, py, pz] = probeXYZ(ci, gMu, gTheta, gTc);
+
+    Plotly.newPlot(`p${ci}`, [
+        {
+            type: 'surface',
+            x: AXIS_ARR, y: AXIS_ARR, z,
+            colorscale: 'RdBu', reversescale: true,
+            cmid: 0, cmin: -vmax, cmax: vmax,
+            showscale: ci === 1,   // colorbar only on middle chart
+            colorbar: { thickness: 10, len: 0.55,
+                        tickfont: { color: '#8b949e', size: 9 } },
+            contours: { z: { show: true, usecolormap: true, project: { z: false } } },
+            hovertemplate: xt + '=%{x:.2f}<br>' + yt + '=%{y:.2f}<br>y=%{z:.2f}<extra></extra>',
+        },
+        {
+            type: 'scatter3d',
+            x: px, y: py, z: pz,
+            mode: 'markers',
+            marker: { size: 8, color: '#f0883e',
+                      line: { color: '#fff', width: 2 } },
+            hovertemplate: 'probe ' + xt + '=%{x:.2f}<br>' + yt + '=%{y:.2f}<br>y=%{z:.2f}<extra></extra>',
+        },
+    ], makeLayout(xt, yt), { responsive: true, displaylogo: false });
+}
+
+// ── Update all 3 charts when a global slider changes ─────────────────────────
+// changed feature: 'mu' | 'theta' | 'tc'
+// chart 0 fixed=tc:    tc change → rebuild surface; mu/theta → probe only
+// chart 1 fixed=theta: theta change → rebuild surface; mu/tc → probe only
+// chart 2 fixed=mu:    mu change → rebuild surface; theta/tc → probe only
+const FIXED_FOR = ['tc', 'theta', 'mu'];  // fixed feature for chart 0,1,2
+
+function updateAll(changedFeat) {
+    const t0 = performance.now();
+
+    for (let ci = 0; ci < 3; ci++) {
+        const [px, py, pz] = probeXYZ(ci, gMu, gTheta, gTc);
+
+        if (FIXED_FOR[ci] === changedFeat) {
+            // This chart's fixed feature changed → recompute full surface
+            const z    = computeZ(ci, gMu, gTheta, gTc);
+            const vmax = estimateVmax(z);
+            Plotly.restyle(`p${ci}`, { z: [z], cmin: -vmax, cmax: vmax }, [0]);
+        }
+        // Always update probe
+        Plotly.restyle(`p${ci}`, { x: [px], y: [py], z: [pz] }, [1]);
+    }
+
+    document.getElementById('perf').textContent =
+        'update ' + (performance.now() - t0).toFixed(0) + ' ms';
+}
+
+// ── Slider wiring ─────────────────────────────────────────────────────────────
+document.getElementById('sl-mu').addEventListener('input', function() {
+    gMu = sliderToVal(+this.value);
+    document.getElementById('v-mu').textContent = gMu.toFixed(2);
+    updateAll('mu');
+});
+document.getElementById('sl-theta').addEventListener('input', function() {
+    gTheta = sliderToVal(+this.value);
+    document.getElementById('v-theta').textContent = gTheta.toFixed(2);
+    updateAll('theta');
+});
+document.getElementById('sl-tc').addEventListener('input', function() {
+    gTc = sliderToVal(+this.value);
+    document.getElementById('v-tc').textContent = gTc.toFixed(2);
+    updateAll('tc');
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+    initPlot(0);
+    initPlot(1);
+    initPlot(2);
+});
+</script>
+</body>
+</html>
