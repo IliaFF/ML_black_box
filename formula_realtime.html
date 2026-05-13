@@ -108,7 +108,7 @@ input[type=range].tc    { accent-color: #3fb950; }
 <div class="slider-bar">
 
   <div class="sl-group">
-    <span class="sl-lbl mu">&mu;</span>
+    <span class="sl-lbl mu">muon_flux</span>
     <div class="sl-wrap">
       <input type="range" class="mu" id="sl-mu" min="-220" max="220" value="0" step="1">
       <div class="ticks"><span>-11</span><span>-5</span><span>0</span><span>5</span><span>11</span></div>
@@ -117,7 +117,7 @@ input[type=range].tc    { accent-color: #3fb950; }
   </div>
 
   <div class="sl-group">
-    <span class="sl-lbl theta">&theta;</span>
+    <span class="sl-lbl theta">cerenkov_angle</span>
     <div class="sl-wrap">
       <input type="range" class="theta" id="sl-theta" min="-220" max="220" value="0" step="1">
       <div class="ticks"><span>-11</span><span>-5</span><span>0</span><span>5</span><span>11</span></div>
@@ -126,7 +126,7 @@ input[type=range].tc    { accent-color: #3fb950; }
   </div>
 
   <div class="sl-group">
-    <span class="sl-lbl tc">tc</span>
+    <span class="sl-lbl tc">track_curvature</span>
     <div class="sl-wrap">
       <input type="range" class="tc" id="sl-tc" min="-220" max="220" value="0" step="1">
       <div class="ticks"><span>-11</span><span>-5</span><span>0</span><span>5</span><span>11</span></div>
@@ -142,7 +142,7 @@ input[type=range].tc    { accent-color: #3fb950; }
   <div class="chart-col">
     <div class="chart-title">
       <span class="dot" style="background:#3fb950"></span>
-      y(&mu;, &theta;) &mdash; <span style="color:#3fb950">tc fixed</span>
+      y(muon_flux, cerenkov_angle) &mdash; <span style="color:#3fb950">track_curvature fixed</span>
     </div>
     <div class="plot-div" id="p0"></div>
   </div>
@@ -150,7 +150,7 @@ input[type=range].tc    { accent-color: #3fb950; }
   <div class="chart-col">
     <div class="chart-title">
       <span class="dot" style="background:#58a6ff"></span>
-      y(&mu;, tc) &mdash; <span style="color:#58a6ff">&theta; fixed</span>
+      y(muon_flux, track_curvature) &mdash; <span style="color:#58a6ff">cerenkov_angle fixed</span>
     </div>
     <div class="plot-div" id="p1"></div>
   </div>
@@ -158,7 +158,7 @@ input[type=range].tc    { accent-color: #3fb950; }
   <div class="chart-col">
     <div class="chart-title">
       <span class="dot" style="background:#f0883e"></span>
-      y(&theta;, tc) &mdash; <span style="color:#f0883e">&mu; fixed</span>
+      y(cerenkov_angle, track_curvature) &mdash; <span style="color:#f0883e">muon_flux fixed</span>
     </div>
     <div class="plot-div" id="p2"></div>
   </div>
@@ -274,9 +274,9 @@ function probeXYZ(pair, mu, theta, tc) {
 
 // ── Plotly init ───────────────────────────────────────────────────────────────
 const LABELS = [
-    { xt: 'mu',    yt: 'theta' },
-    { xt: 'mu',    yt: 'tc'    },
-    { xt: 'theta', yt: 'tc'    },
+    { xt: 'muon_flux',      yt: 'cerenkov_angle'  },
+    { xt: 'muon_flux',      yt: 'track_curvature' },
+    { xt: 'cerenkov_angle', yt: 'track_curvature' },
 ];
 
 function makeLayout(xt, yt) {
