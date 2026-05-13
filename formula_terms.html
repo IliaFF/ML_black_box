@@ -25,6 +25,17 @@ body {
   display: flex; align-items: center; flex-shrink: 0; gap: 2px;
   flex-wrap: wrap;
 }
+.notation-bar {
+  background: #0d1117; border-bottom: 1px solid #21262d;
+  padding: 5px 24px; font-size: 11px; color: #8b949e;
+  display: flex; align-items: center; gap: 20px; flex-shrink: 0;
+}
+.notation-bar span { white-space: nowrap; }
+.notation-bar code {
+  background: #21262d; border-radius: 3px; padding: 1px 5px;
+  font-size: 11px; color: #79c0ff; font-family: monospace;
+}
+.nt-sym { color: #e6edf3; font-weight: 600; margin-right: 3px; }
 #plot  { flex: 1; min-height: 0; }
 </style>
 </head>
@@ -44,6 +55,14 @@ body {
   <span style="color:#8b949e"> + </span>
   <span style="color:#56d364">&mu;&middot;tc&middot;C(&theta;)</span>
   <span style="color:#8b949e">&nbsp;] &middot; G<sub>main</sub></span>
+</div>
+<div class="notation-bar">
+  <span>Обозначения:</span>
+  <span><span class="nt-sym">&mu;</span> = <code>muon_flux</code></span>
+  <span><span class="nt-sym">&theta;</span> = <code>cerenkov_angle</code></span>
+  <span><span class="nt-sym">tc</span> = <code>track_curvature</code></span>
+  <span><span class="nt-sym">x</span> = любая фича (для G<sub>clip</sub>)</span>
+  <span style="margin-left:auto;color:#484f58">k<sub>1</sub> = 2.500 &nbsp;·&nbsp; k<sub>2</sub> = 1.800 &nbsp;·&nbsp; &beta;<sub>tc</sub> = 10.0</span>
 </div>
 <div id="plot"></div>
 <script>
