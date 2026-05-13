@@ -132,6 +132,12 @@ Open HTML files locally in a browser. Start from [index.html](index.html) — na
 | [formula_mu_tc.html](formula_mu_tc.html) | y(μ, tc) — slider for θ |
 | [formula_theta_tc.html](formula_theta_tc.html) | y(θ, tc) — slider for μ |
 
+### Interactive 3D Sampling Density
+
+| File | Description |
+|------|-------------|
+| [sampling_density_3d.html](sampling_density_3d.html) | Isosurfaces + scatter of 44k points in (muon_flux, cerenkov_angle, track_curvature) space. Color = log(points per voxel) — white sparse → red dense |
+
 ### SHAP & Explainability
 
 | File | Description |
@@ -156,6 +162,7 @@ Open HTML files locally in a browser. Start from [index.html](index.html) — na
 
 | File | Description |
 |------|-------------|
+| [formula_v2.html](formula_v2.html) | Formula V2 reference rendered with KaTeX — all 44 parameters, equations, parameter tables |
 | [report_final.ipynb](report_final.ipynb) | Final analysis notebook — full pipeline, zone analysis, results |
 | [work_report_final.md](work_report_final.md) | Final work report — methodology and findings |
 | [early_stages_full.md](early_stages_full.md) | Full log of early-stage experiments before formula discovery |
