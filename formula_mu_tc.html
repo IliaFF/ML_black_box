@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Formula V2: y(mu, tc) | fixed theta</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0d1117; color: #e6edf3;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+}
+.header {
+  background: linear-gradient(135deg, #161b22, #21262d);
+  padding: 10px 20px; border-bottom: 1px solid #30363d;
+  display: flex; align-items: center; gap: 14px; flex-shrink: 0;
+}
+.header h1 { font-size: 15px; font-weight: 600; color: #f0f6fc; }
+.badge { background: #238636; color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 12px; }
+.info { font-size: 11px; color: #8b949e; margin-left: auto; }
+#perf { font-size: 11px; color: #484f58; margin-left: 14px; }
+
+.slider-bar {
+  background: #161b22; border-bottom: 1px solid #30363d;
+  padding: 10px 24px; display: flex; align-items: center; gap: 16px;
+  flex-shrink: 0;
+}
+.sl-name { font-size: 13px; color: #f0883e; font-weight: 700; white-space: nowrap; }
+.sl-val  { font-size: 14px; color: #f0883e; font-weight: 700;
+           font-variant-numeric: tabular-nums; width: 52px; text-align: right; }
+input[type=range] {
+  flex: 1; height: 6px; cursor: pointer;
+  accent-color: #f0883e; background: #30363d;
+  border-radius: 3px; outline: none;
+}
+.ticks { display: flex; justify-content: space-between;
+         font-size: 10px; color: #484f58; width: 100%; }
+.sl-wrap { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+
+.plot-div { flex: 1; min-height: 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>&#x1F4CA; y(&mu;, tc) &mdash; fixed &theta;</h1>
+  <span class="badge">JS formula</span>
+  <div class="info">
+    Grid: <strong>150 &times; 150</strong>
+    &nbsp;|&nbsp; range [&minus;11, 11] &nbsp;|&nbsp; no pre-cached data
+  </div>
+  <span id="perf">ready</span>
+</div>
+
+<div class="slider-bar">
+  <span class="sl-name">&theta; = </span>
+  <div class="sl-wrap">
+    <input type="range" id="sl-fixed" min="-220" max="220" value="0" step="1">
+    <div class="ticks"><span>-11</span><span>-5</span><span>0</span><span>5</span><span>11</span></div>
+  </div>
+  <span class="sl-val" id="v-fixed">0.00</span>
+</div>
+
+<div class="plot-div" id="plot"></div>
+
+<script>
+const P = [100.65263909012971, 9.663616403464925, 1.4443095539769313, 269.79827105743055, 9.289874005645217, 1.2859414460309735, 350.53441362505436, -4.042437175868336, -11.031758517736828, 1.8216815620119002, -10.554473502046344, 0.061509832641303906, -1.7752430692624532, 0.30146192824001933, 0.47941661042205175, 3.9860106390253236, -0.07191038621600632, 1.5567838823503783, -6.095634511395874, 0.35267303859199306, 0.156402887441348, -0.25688056832957823, 0.21553912727971092, 0.3769999390436774, 3.7306165334406924, 0.8663007140659852, 0.2684761941307627, -0.6828008892221666, 1.7193521614759475, 0.5297702857268238, 1.7999525706153632, 5.235767056477067e-05, 2.50002228616747, 27.616811000747678, 1.4007210681003033, -0.43407936786251444, 9.999628274574908, -1.6583035529354066e-05, -773.7372827585042, 1.5004399500972365, 0.0500000000000014, -0.038948239001619284, 3.521309324599015, 5.737988341520746];
+
+const GRID_SIZE  = 150;
+const RANGE_MIN  = -11;
+const RANGE_MAX  =  11;
+const PAIR       = 1;
+const XT = 'mu';
+const YT = 'tc';
+
+function sliderToVal(s) { return s / 20; }  // step = 1/20 = 0.05
+
+const AXIS = new Float64Array(GRID_SIZE);
+for (let i = 0; i < GRID_SIZE; i++)
+    AXIS[i] = RANGE_MIN + (RANGE_MAX - RANGE_MIN) * i / (GRID_SIZE - 1);
+const AXIS_ARR = Array.from(AXIS);
+
+function G_clip(x) {
+    const v = 10 - Math.abs(x);
+    return v < 0 ? 0.0 : v > 1 ? 1.0 : v;
+}
+
+function predict_v2(mu, theta, tc) {
+    const A_bw=P[0],  a_bw=P[1],  gW=P[2];
+    const AH=P[3],    mH=P[4],    gH=P[5];
+    const AT=P[6],    tz=P[7],    tH=P[8],    gT=P[9];
+    const BT=P[10],   eT=P[11],   cT=P[12];
+    const C0n=P[13],  An=P[14],   nn=P[15];
+    const Dn=P[16],   en=P[17],   cn=P[18];
+    const Dn2=P[19],  en2=P[20],  cn2=P[21];
+    const C0p=P[22],  Ac=P[23],   nc=P[24];
+    const Bc=P[25],   cc=P[26];
+    const Dp=P[27],   ep=P[28],   cp=P[29];
+    const k2=P[30],   alpha_F=P[31], k1=P[32];
+    const BT_pos=P[33], eT_pos=P[34], cT_pos=P[35];
+    const beta_tc=P[36];
+    const AT_pos=P[37], tz_pos=P[38], tH_pos=P[39], gT_pos=P[40];
+    const Dp2=P[41],  ep2=P[42],  cp2=P[43];
+
+    const absMu  = Math.abs(mu);
+    const absThe = Math.abs(theta);
+    const Fv = A_bw * mu * mu / ((absMu - a_bw) ** 2 + gW * gW);
+    const Hv = AH * (1 / ((mu - mH) ** 2 + gH * gH)
+                   - 1 / ((mu + mH) ** 2 + gH * gH));
+    let gt;
+    if (theta < 0) {
+        gt = AT * theta * (theta - tz) / ((theta - tH) ** 2 + gT * gT)
+           + BT * theta * Math.exp(-eT * (theta - cT) ** 2);
+    } else {
+        gt = AT_pos * theta * (theta - tz_pos) / ((theta - tH_pos) ** 2 + gT_pos * gT_pos)
+           + BT_pos * theta * Math.exp(-eT_pos * (theta - cT_pos) ** 2);
+    }
+    let Cv;
+    if (theta < 0) {
+        Cv = C0n
+           + An  * Math.sinh(k2 * absThe / nn)
+           + Dn  * theta * Math.exp(-en  * (theta - cn ) ** 2)
+           + Dn2 * theta * Math.exp(-en2 * (theta - cn2) ** 2);
+    } else {
+        Cv = C0p
+           + Ac  * Math.sinh(k2 * theta / nc)
+           + Bc  * theta * Math.exp(-cc * theta * theta)
+           + Dp  * theta * Math.exp(-ep  * (theta - cp ) ** 2)
+           + Dp2 * theta * Math.exp(-ep2 * (theta - cp2) ** 2);
+    }
+    const sin_th = Math.sin(k1 * theta);
+    const cos_c  = Math.cos(k2 * mu + tc * tc / beta_tc);
+    const core   = Fv * (1 + alpha_F * tc * tc) * sin_th
+                 + Hv + gt * cos_c + mu * tc * Cv;
+    return core * G_clip(mu) * G_clip(theta) * G_clip(tc);
+}
+
+function computeZ(fixedVal) {
+    const z = new Array(GRID_SIZE);
+    for (let i = 0; i < GRID_SIZE; i++) {
+        const row = new Float64Array(GRID_SIZE);
+        const a1 = AXIS[i];
+        for (let j = 0; j < GRID_SIZE; j++) {
+            const a2 = AXIS[j];
+            if      (PAIR === 0) row[j] = predict_v2(a1, a2, fixedVal);
+            else if (PAIR === 1) row[j] = predict_v2(a1, fixedVal, a2);
+            else                 row[j] = predict_v2(fixedVal, a1, a2);
+        }
+        z[i] = row;
+    }
+    return z;
+}
+
+function estimateVmax(z) {
+    const step = Math.max(1, Math.floor(GRID_SIZE / 20));
+    const sample = [];
+    for (let i = 0; i < GRID_SIZE; i += step)
+        for (let j = 0; j < GRID_SIZE; j += step)
+            sample.push(Math.abs(z[i][j]));
+    sample.sort((a, b) => a - b);
+    return Math.max(sample[Math.floor(sample.length * 0.97)], 1.0);
+}
+
+let curFixed = 0.0;
+
+function initPlot() {
+    const z    = computeZ(curFixed);
+    const vmax = estimateVmax(z);
+    Plotly.newPlot('plot', [{
+        type: 'surface',
+        x: AXIS_ARR, y: AXIS_ARR, z,
+        colorscale: 'RdBu', reversescale: true,
+        cmid: 0, cmin: -vmax, cmax: vmax,
+        colorbar: { thickness: 12, len: 0.65,
+                    tickfont: { color: '#8b949e', size: 10 } },
+        contours: { z: { show: true, usecolormap: true, project: { z: false } } },
+        hovertemplate: XT + '=%{x:.2f}<br>' + YT + '=%{y:.2f}<br>y=%{z:.2f}<extra></extra>',
+    }], {
+        paper_bgcolor: '#0d1117',
+        plot_bgcolor:  '#161b22',
+        margin: { l: 0, r: 0, t: 0, b: 0 },
+        scene: {
+            bgcolor: '#161b22',
+            xaxis: { title: XT, color: '#8b949e', gridcolor: '#21262d',
+                     range: [RANGE_MIN, RANGE_MAX] },
+            yaxis: { title: YT, color: '#8b949e', gridcolor: '#21262d',
+                     range: [RANGE_MIN, RANGE_MAX] },
+            zaxis: { title: 'y', color: '#8b949e', gridcolor: '#21262d' },
+            camera: { eye: { x: 1.4, y: 1.4, z: 0.85 } },
+        },
+    }, { responsive: true, displaylogo: false });
+}
+
+document.getElementById('sl-fixed').addEventListener('input', function() {
+    curFixed = sliderToVal(+this.value);
+    document.getElementById('v-fixed').textContent = curFixed.toFixed(2);
+    const t0   = performance.now();
+    const z    = computeZ(curFixed);
+    const vmax = estimateVmax(z);
+    Plotly.restyle('plot', { z: [z], cmin: -vmax, cmax: vmax }, [0]);
+    document.getElementById('perf').textContent =
+        'update ' + (performance.now() - t0).toFixed(0) + ' ms';
+});
+
+window.addEventListener('load', initPlot);
+</script>
+</body>
+</html>
