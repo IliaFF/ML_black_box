@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Formula V2: y(mu, tc) | fixed theta</title>
+<title>Formula V2: y(muon_flux, track_curvature) | fixed cerenkov_angle</title>
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -44,7 +44,7 @@ input[type=range] {
 <body>
 
 <div class="header">
-  <h1>&#x1F4CA; y(&mu;, tc) &mdash; fixed &theta;</h1>
+  <h1>&#x1F4CA; y(muon_flux, track_curvature) &mdash; fixed cerenkov_angle</h1>
   <span class="badge">JS formula</span>
   <div class="info">
     Grid: <strong>150 &times; 150</strong>
@@ -54,7 +54,7 @@ input[type=range] {
 </div>
 
 <div class="slider-bar">
-  <span class="sl-name">&theta; = </span>
+  <span class="sl-name">cerenkov_angle = </span>
   <div class="sl-wrap">
     <input type="range" id="sl-fixed" min="-220" max="220" value="0" step="1">
     <div class="ticks"><span>-11</span><span>-5</span><span>0</span><span>5</span><span>11</span></div>
@@ -71,8 +71,8 @@ const GRID_SIZE  = 150;
 const RANGE_MIN  = -11;
 const RANGE_MAX  =  11;
 const PAIR       = 1;
-const XT = 'mu';
-const YT = 'tc';
+const XT = 'muon_flux';
+const YT = 'track_curvature';
 
 function sliderToVal(s) { return s / 20; }  // step = 1/20 = 0.05
 
