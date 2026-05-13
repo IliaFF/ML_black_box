@@ -112,60 +112,55 @@ reg_alpha=1.54, subsample=0.946, colsample_bytree=0.446
 
 ## Interactive Visualizations
 
-Open HTML files locally in a browser (or use GitHub Pages).
+Open HTML files locally in a browser. Start from [index.html](index.html) — navigation hub for all 15 visualizations.
 
 ### Key Dashboards
 
 | File | Description |
 |------|-------------|
-| [index.html](index.html) | Navigation hub — all 30 visualizations |
+| [index.html](index.html) | Navigation hub — all 15 visualizations |
 | [discoveries_timeline.html](discoveries_timeline.html) | 10-step discovery chronology with formulas and algorithms |
 | [score_timeline.html](score_timeline.html) | RMSE/R² progression across all 3 phases |
-| [formula_terms.html](formula_terms.html) | 6-panel chart of each formula term F, H, sin, gθ, C, G_clip |
+| [formula_terms.html](formula_terms.html) | 6-panel chart of each formula term: Fv, Hv, sin, gθ, C, G_clip |
 
 ### Interactive 3D Formula Surfaces
 
 | File | Description |
 |------|-------------|
+| [formula_realtime.html](formula_realtime.html) | All three surfaces — 3 global sliders (μ, θ, tc) update all simultaneously |
 | [formula_mu_theta.html](formula_mu_theta.html) | y(μ, θ) — slider for tc |
 | [formula_mu_tc.html](formula_mu_tc.html) | y(μ, tc) — slider for θ |
 | [formula_theta_tc.html](formula_theta_tc.html) | y(θ, tc) — slider for μ |
-| [formula_realtime.html](formula_realtime.html) | All three surfaces combined |
 
 ### SHAP & Explainability
 
 | File | Description |
 |------|-------------|
 | [shap_beeswarm.html](shap_beeswarm.html) | SHAP beeswarm — feature importance across all rows |
-| [shap_scatter.html](shap_scatter.html) | SHAP scatter — nonlinearities and interactions |
-| [cluster_explorer.html](cluster_explorer.html) | PCA + k-means in SHAP space |
+| [shap_scatter.html](shap_scatter.html) | SHAP scatter — nonlinearities and interactions per feature |
 
-### EDA Dashboards
-
-| File | Description |
-|------|-------------|
-| [3d_data_raw.html](3d_data_raw.html) | 3D scatter of raw y(μ, θ) data |
-| [residuals_dashboard.html](residuals_dashboard.html) | Residuals by feature after formula |
-| [current_state.html](current_state.html) | Model state snapshot — zone errors |
-| [hidden_structure.html](hidden_structure.html) | Threshold effects and hidden patterns |
-| [y_vs_features.html](y_vs_features.html) | y vs all 13 features (Bokeh) |
-
-### Discovery Plots (research sequence)
+### Data & Discovery Plots
 
 | File | Description |
 |------|-------------|
-| [plot_20a_y_mu_theta.html](plot_20a_y_mu_theta.html) | First view of y(μ, θ) heatmap |
-| [plot_20b_y_vs_theta_slices.html](plot_20b_y_vs_theta_slices.html) | sin(θ) structure — slices by μ |
-| [plot_20c_y_vs_mu_slices.html](plot_20c_y_vs_mu_slices.html) | Breit-Wigner structure — slices by θ |
-| [plot_23_FH_extraction.html](plot_23_FH_extraction.html) | F(μ) and H(μ) extraction |
-| [plot_24_FH_clean.html](plot_24_FH_clean.html) | F(μ) and H(μ) — final fit, R²≈0.998 |
-| [plot_25_gated_refit.html](plot_25_gated_refit.html) | Adding G_clip locality gates |
-| [plot_28_error_3d.html](plot_28_error_3d.html) | 3D error after gates — what LGBM corrects |
-| [plot_41_mu_slice.html](plot_41_mu_slice.html) | Discovering cos(k₂μ + tc²/β) modulation |
-| [plot_42_cos_mu.html](plot_42_cos_mu.html) | Phase structure of cosine term |
-| [plot_45_active_diag.html](plot_45_active_diag.html) | Active zone boundary — threshold 9.07 |
-| [plot_3d_full.html](plot_3d_full.html) | Full dataset 3D — locality visible |
-| [plot_3d_residuals.html](plot_3d_residuals.html) | 3D residuals after formula |
+| [3d_data_raw.html](3d_data_raw.html) | 3D scatter of raw y(μ, θ) data — locality visible immediately |
+| [plot_20a_y_mu_theta.html](plot_20a_y_mu_theta.html) | First view of y(μ, θ) heatmap — Breit-Wigner × sin structure |
+| [plot_20b_y_vs_theta_slices.html](plot_20b_y_vs_theta_slices.html) | y vs θ slices by μ — sin(k₁θ) structure confirmed |
+| [plot_20c_y_vs_mu_slices.html](plot_20c_y_vs_mu_slices.html) | y vs μ slices by θ — F(μ) Breit-Wigner extraction |
+| [plot_21_theta_func.html](plot_21_theta_func.html) | gθ(θ) structure — rational + Gaussian, asymmetric branches |
+| [plot_3d_residuals.html](plot_3d_residuals.html) | 3D residuals after Formula V2 — what LGBM corrects |
+
+---
+
+## Repository Files
+
+| File | Description |
+|------|-------------|
+| [report_final.ipynb](report_final.ipynb) | Final analysis notebook — full pipeline, zone analysis, results |
+| [work_report_final.md](work_report_final.md) | Final work report — methodology and findings |
+| [early_stages_full.md](early_stages_full.md) | Full log of early-stage experiments before formula discovery |
+| [formula_v2.md](formula_v2.md) | Formula V2 reference — all 44 parameters and derivation |
+| [presentation_speech.md](presentation_speech.md) | Presentation script for the competition results |
 
 ---
 
