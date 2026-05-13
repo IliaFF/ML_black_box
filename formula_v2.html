@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Formula V2 — Reference</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {
+          delimiters: [
+            {left:'$$', right:'$$', display:true},
+            {left:'$',  right:'$',  display:false}
+          ],
+          throwOnError: false
+        })"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0d1117; color: #e6edf3;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  line-height: 1.7;
+  padding: 0 0 60px;
+}
+
+/* ── header ── */
+.header {
+  background: linear-gradient(135deg, #161b22, #21262d);
+  padding: 14px 48px;
+  border-bottom: 1px solid #30363d;
+  display: flex; align-items: center; gap: 14px;
+  position: sticky; top: 0; z-index: 10;
+}
+.header h1 { font-size: 15px; font-weight: 600; color: #f0f6fc; }
+.badge { background: #1f6feb; color: #fff; font-size: 10px;
+         padding: 2px 8px; border-radius: 12px; }
+.back { margin-left: auto; font-size: 12px; color: #58a6ff;
+        text-decoration: none; }
+.back:hover { text-decoration: underline; }
+
+/* ── content ── */
+.content {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 48px;
+}
+
+h1.doc-title {
+  font-size: 26px; font-weight: 700; color: #f0f6fc;
+  margin-bottom: 8px;
+}
+.meta { font-size: 13px; color: #8b949e; margin-bottom: 32px; }
+.meta code {
+  background: #21262d; border: 1px solid #30363d;
+  padding: 1px 6px; border-radius: 4px; font-size: 12px;
+  color: #79c0ff;
+}
+
+h2 {
+  font-size: 17px; font-weight: 700; color: #f0f6fc;
+  margin: 40px 0 16px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #21262d;
+}
+h3 {
+  font-size: 14px; font-weight: 600; color: #c9d1d9;
+  margin: 24px 0 10px;
+}
+
+p { color: #c9d1d9; margin-bottom: 14px; }
+strong { color: #e6edf3; }
+
+/* ── math display blocks ── */
+.katex-display {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-left: 3px solid #1f6feb;
+  border-radius: 6px;
+  padding: 18px 24px;
+  margin: 18px 0;
+  overflow-x: auto;
+}
+.katex-display > .katex { font-size: 1.15em; }
+
+/* boxed main formula */
+.main-formula .katex-display {
+  border-left-color: #f0883e;
+  background: #1a1006;
+}
+
+/* ── tables ── */
+table {
+  border-collapse: collapse;
+  margin: 14px 0 22px;
+  font-size: 13px;
+  width: auto;
+}
+th {
+  background: #21262d; color: #8b949e;
+  font-weight: 600; font-size: 11px; letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 7px 16px; text-align: left;
+  border: 1px solid #30363d;
+}
+td {
+  padding: 6px 16px;
+  border: 1px solid #21262d;
+  color: #c9d1d9;
+  font-variant-numeric: tabular-nums;
+}
+tr:nth-child(even) td { background: #161b22; }
+td:first-child { color: #79c0ff; font-family: monospace; font-size: 13px; }
+
+/* ── code block ── */
+pre {
+  background: #161b22; border: 1px solid #30363d;
+  border-radius: 6px; padding: 16px 20px;
+  font-size: 12px; color: #8b949e;
+  overflow-x: auto; line-height: 1.6;
+  margin: 14px 0;
+}
+code { font-family: 'Consolas', 'Fira Code', monospace; }
+pre code { color: #c9d1d9; }
+pre .cm { color: #8b949e; }
+
+/* ── note/blockquote ── */
+.note {
+  background: #161b22; border-left: 3px solid #3fb950;
+  border-radius: 0 6px 6px 0;
+  padding: 10px 16px; margin: 14px 0;
+  font-size: 13px; color: #8b949e;
+}
+
+hr {
+  border: none; border-top: 1px solid #21262d;
+  margin: 36px 0;
+}
+
+.toc {
+  background: #161b22; border: 1px solid #30363d;
+  border-radius: 8px; padding: 16px 20px;
+  margin-bottom: 36px;
+}
+.toc-title { font-size: 12px; font-weight: 700; color: #8b949e;
+             text-transform: uppercase; letter-spacing: .07em;
+             margin-bottom: 10px; }
+.toc a { display: block; font-size: 13px; color: #58a6ff;
+         text-decoration: none; padding: 2px 0; }
+.toc a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>&#x1F4D0; Formula V2 &mdash; Reference</h1>
+  <span class="badge">44 params</span>
+  <a class="back" href="index.html">&#x2190; Index</a>
+</div>
+
+<div class="content">
+
+<h1 class="doc-title">Итоговая формула (Модель V2)</h1>
+<div class="meta">
+  <strong>44 параметра</strong> (3 вырождены → 41 эффективно) &nbsp;·&nbsp;
+  Область применения: $|x_i| < 9$ (active zone) &nbsp;·&nbsp;
+  Файл: <code>results/model_u_v2_final_params.npy</code>
+</div>
+
+<div class="toc">
+  <div class="toc-title">Содержание</div>
+  <a href="#full">Полная формула</a>
+  <a href="#gate">Гейт-функция $G_\text{clip}$</a>
+  <a href="#F">$F(\mu)$ — чётный резонанс Брейта–Вигнера</a>
+  <a href="#H">$H(\mu)$ — нечётный двойной резонанс</a>
+  <a href="#gt">$g_\theta(\theta)$ — θ-модулятор фазы</a>
+  <a href="#C">$C(\theta)$ — коэффициент при $\mu \cdot tc$</a>
+  <a href="#diff">Отличия от K4</a>
+  <a href="#params">Порядок параметров в массиве</a>
+</div>
+
+<hr>
+
+<!-- ── FULL FORMULA ── -->
+<h2 id="full">Полная формула</h2>
+
+<div class="main-formula">
+$$
+\boxed{y = \Bigl(F(\mu)\sin(k_1\theta) + H(\mu) + g_\theta(\theta)\cos\!\bigl(k_2\mu + \tfrac{tc^2}{10}\bigr) + \mu\cdot tc\cdot C(\theta)\Bigr)\cdot G_{\text{main}}}
+$$
+</div>
+
+<h3>Константы</h3>
+$$k_1 = 2.500, \qquad k_2 = 1.800$$
+
+<hr>
+
+<!-- ── GATE ── -->
+<h2 id="gate">Гейт-функция</h2>
+
+$$G_{\text{clip}}(x) = \operatorname{clip}(10 - |x|,\; 0,\; 1)$$
+
+$$G_{\text{main}} = G_{\text{clip}}(\mu)\cdot G_{\text{clip}}(\theta)\cdot G_{\text{clip}}(db)\cdot\prod_{i=1}^{9} G_{\text{clip}}(g_i)$$
+
+<p>где $g_i$ — девять нефизических gate-признаков: <code>scint_alpha</code>, <code>pixel_jitter</code>, <code>cathode_temp</code>, <code>anode_noise</code>, <code>beam_phase</code>, <code>shield_rho</code>, <code>veto_count</code>, <code>gain_offset</code>, <code>trigger_rate</code>.</p>
+
+<div class="note">В active zone все $|x_i| < 9$ &nbsp;→&nbsp; $G_{\text{main}} = 1$.</div>
+
+<hr>
+
+<!-- ── F(mu) ── -->
+<h2 id="F">Компонента $F(\mu)$ — чётный резонанс Брейта–Вигнера</h2>
+
+$$F(\mu) = \frac{A_{bw}\,\mu^2}{\bigl(|\mu| - a_{bw}\bigr)^2 + g_W^2}$$
+
+<table>
+<tr><th>Параметр</th><th>Значение</th></tr>
+<tr><td>$A_{bw}$</td><td>100.653</td></tr>
+<tr><td>$a_{bw}$</td><td>9.664</td></tr>
+<tr><td>$g_W$</td><td>1.444</td></tr>
+</table>
+
+<hr>
+
+<!-- ── H(mu) ── -->
+<h2 id="H">Компонента $H(\mu)$ — нечётный двойной резонанс</h2>
+
+$$H(\mu) = A_H\left(\frac{1}{(\mu - m_H)^2 + g_H^2} - \frac{1}{(\mu + m_H)^2 + g_H^2}\right)$$
+
+<table>
+<tr><th>Параметр</th><th>Значение</th></tr>
+<tr><td>$A_H$</td><td>269.798</td></tr>
+<tr><td>$m_H$</td><td>9.290</td></tr>
+<tr><td>$g_H$</td><td>1.286</td></tr>
+</table>
+
+<hr>
+
+<!-- ── g_theta ── -->
+<h2 id="gt">Компонента $g_\theta(\theta)$ — θ-модулятор фазы</h2>
+
+<p>В V2 <strong>ненулевая с обеих сторон</strong>:</p>
+
+$$
+g_\theta(\theta) =
+\begin{cases}
+\dfrac{A_T\,\theta\,(\theta - t_z)}{(\theta - t_H)^2 + g_T^2} + B_T\,\theta\,e^{-e_T(\theta - c_T)^2} & \theta < 0 \\[14pt]
+B_T^+\,\theta\,e^{-e_T^+(\theta - c_T^+)^2} & \theta \geq 0
+\end{cases}
+$$
+
+<h3>Параметры $g_\theta^-$ &nbsp;($\theta < 0$)</h3>
+<table>
+<tr><th>Параметр</th><th>Значение</th></tr>
+<tr><td>$A_T$</td><td>350.534</td></tr>
+<tr><td>$t_z$</td><td>−4.042</td></tr>
+<tr><td>$t_H$</td><td>−11.032</td></tr>
+<tr><td>$g_T$</td><td>1.822</td></tr>
+<tr><td>$B_T$</td><td>−10.554</td></tr>
+<tr><td>$e_T$</td><td>0.0615</td></tr>
+<tr><td>$c_T$</td><td>−1.775</td></tr>
+</table>
+
+<h3>Параметры $g_\theta^+$ &nbsp;($\theta \geq 0$)</h3>
+<table>
+<tr><th>Параметр</th><th>Значение</th></tr>
+<tr><td>$B_T^+$</td><td>27.617</td></tr>
+<tr><td>$e_T^+$</td><td>1.401</td></tr>
+<tr><td>$c_T^+$</td><td>−0.434</td></tr>
+</table>
+
+<hr>
+
+<!-- ── C(theta) ── -->
+<h2 id="C">Компонента $C(\theta)$ — коэффициент при $\mu \cdot tc$</h2>
+
+$$
+C(\theta) =
+\begin{cases}
+C_{0n} + A_n\,\sinh\!\left(\dfrac{k_2\,|\theta|}{n_n}\right) + D_n\,\theta\,e^{-e_n(\theta-c_n)^2} + D_{n2}\,\theta\,e^{-e_{n2}(\theta-c_{n2})^2} & \theta < 0 \\[14pt]
+C_{0p} + A_c\,\sinh\!\left(\dfrac{k_2\,\theta}{n_c}\right) + B_c\,\theta\,e^{-c_c\,\theta^2} + D_p\,\theta\,e^{-e_p(\theta-c_p)^2} + D_{p2}\,\theta\,e^{-e_{p2}(\theta-c_{p2})^2} & \theta \geq 0
+\end{cases}
+$$
+
+<h3>$C_\text{neg}$ &nbsp;($\theta < 0$)</h3>
+<table>
+<tr><th>Параметр</th><th>Значение</th></tr>
+<tr><td>$C_{0n}$</td><td>0.3015</td></tr>
+<tr><td>$A_n$</td><td>0.4794</td></tr>
+<tr><td>$n_n$</td><td>3.986</td></tr>
+<tr><td>$D_n$</td><td>−0.0719</td></tr>
+<tr><td>$e_n$</td><td>1.557</td></tr>
+<tr><td>$c_n$</td><td>−6.096</td></tr>
+<tr><td>$D_{n2}$</td><td>0.3527</td></tr>
+<tr><td>$e_{n2}$</td><td>0.1564</td></tr>
+<tr><td>$c_{n2}$</td><td>−0.257</td></tr>
+</table>
+
+<h3>$C_\text{pos}$ &nbsp;($\theta \geq 0$)</h3>
+<table>
+<tr><th>Параметр</th><th>Значение</th></tr>
+<tr><td>$C_{0p}$</td><td>0.2155</td></tr>
+<tr><td>$A_c$</td><td>0.3770</td></tr>
+<tr><td>$n_c$</td><td>3.731</td></tr>
+<tr><td>$B_c$</td><td>0.8663</td></tr>
+<tr><td>$c_c$</td><td>0.2685</td></tr>
+<tr><td>$D_p$</td><td>−0.6828</td></tr>
+<tr><td>$e_p$</td><td>1.719</td></tr>
+<tr><td>$c_p$</td><td>0.530</td></tr>
+<tr><td>$D_{p2}$</td><td>−0.0389</td></tr>
+<tr><td>$e_{p2}$</td><td>3.521</td></tr>
+<tr><td>$c_{p2}$</td><td>5.738</td></tr>
+</table>
+
+<hr>
+
+<!-- ── DIFF ── -->
+<h2 id="diff">Отличия от K4</h2>
+
+<table>
+<tr><th>Компонента</th><th>K4</th><th>V2</th></tr>
+<tr><td>$g_\theta(\theta \geq 0)$</td><td>≡ 0</td><td>Гауссиан ($B_T^+, e_T^+, c_T^+$)</td></tr>
+<tr><td>$C_\text{neg}$ гауссианы</td><td>0</td><td>2 (+6 params)</td></tr>
+<tr><td>$C_\text{pos}$ гауссианы</td><td>1</td><td>3 (+6 params)</td></tr>
+<tr><td>Структура $F, H, k_1, k_2$</td><td colspan="2">одинакова</td></tr>
+</table>
+
+<p>Три параметра V2 вырождены:</p>
+<ul style="color:#8b949e; font-size:13px; padding-left:20px; line-height:2;">
+  <li>$\alpha_F \approx 5\times10^{-5}$ &nbsp;→&nbsp; множитель $(1+\alpha_F tc^2) \approx 1$</li>
+  <li>$\beta_{tc} \approx 10$ &nbsp;→&nbsp; аргумент косинуса $tc^2/\beta_{tc} = tc^2/10$ как в K4</li>
+  <li>$A_T^+ \approx -2\times10^{-5}$ &nbsp;→&nbsp; рациональная часть $g_\theta^+$ ≡ 0</li>
+</ul>
+
+<hr>
+
+<!-- ── PARAMS ORDER ── -->
+<h2 id="params">Порядок параметров в массиве <code>p[0..43]</code></h2>
+
+<pre><code><span class="cm"># p[0..2]:   A_bw, a_bw, gW</span>
+<span class="cm"># p[3..5]:   AH, mH, gH</span>
+<span class="cm"># p[6..9]:   AT, tz, tH, gT          (gt_neg rational)</span>
+<span class="cm"># p[10..12]: BT, eT, cT              (gt_neg Gaussian)</span>
+<span class="cm"># p[13..15]: C0n, An, nn             (C_neg sinh)</span>
+<span class="cm"># p[16..18]: Dn, en, cn              (C_neg Gaussian 1)</span>
+<span class="cm"># p[19..21]: Dn2, en2, cn2           (C_neg Gaussian 2)</span>
+<span class="cm"># p[22..24]: C0p, Ac, nc             (C_pos sinh)</span>
+<span class="cm"># p[25..26]: Bc, cc                  (C_pos Gaussian 1, center=0)</span>
+<span class="cm"># p[27..29]: Dp, ep, cp              (C_pos Gaussian 2)</span>
+<span class="cm"># p[30]:     k2</span>
+<span class="cm"># p[31]:     alpha_F                 (DEGENERATE ≈0)</span>
+<span class="cm"># p[32]:     k1</span>
+<span class="cm"># p[33..35]: BT_pos, eT_pos, cT_pos  (gt_pos Gaussian)</span>
+<span class="cm"># p[36]:     beta_tc                 (DEGENERATE ≈10)</span>
+<span class="cm"># p[37..40]: AT_pos, tz_pos, tH_pos, gT_pos  (DEGENERATE, AT_pos≈0)</span>
+<span class="cm"># p[41..43]: Dp2, ep2, cp2           (C_pos Gaussian 3)</span></code></pre>
+
+</div>
+</body>
+</html>
