@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Dz5 ML — Визуализации</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0d1117; color: #e6edf3;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  padding: 32px 40px;
+}
+h1 { font-size: 20px; color: #f0f6fc; margin-bottom: 6px; }
+.sub { font-size: 13px; color: #8b949e; margin-bottom: 32px; }
+.badge { background: #238636; color: #fff; font-size: 10px;
+         padding: 2px 8px; border-radius: 12px; margin-left: 10px;
+         vertical-align: middle; }
+
+.section { margin-bottom: 32px; }
+.section-title {
+  font-size: 12px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: #8b949e;
+  border-bottom: 1px solid #21262d;
+  padding-bottom: 6px; margin-bottom: 14px;
+}
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+
+.card {
+  background: #161b22; border: 1px solid #30363d;
+  border-radius: 8px; padding: 14px 16px;
+  text-decoration: none; color: inherit;
+  display: flex; flex-direction: column; gap: 5px;
+  transition: border-color .15s, background .15s;
+}
+.card:hover { border-color: #58a6ff; background: #1c2128; }
+.card-title { font-size: 14px; font-weight: 600; color: #58a6ff; }
+.card-desc  { font-size: 12px; color: #8b949e; }
+.card-meta  { font-size: 11px; color: #484f58; margin-top: auto; padding-top: 6px; }
+.tag {
+  display: inline-block; font-size: 10px; padding: 1px 6px;
+  border-radius: 10px; margin-right: 4px;
+  background: #21262d; border: 1px solid #30363d;
+}
+.tag.orange { border-color: #f0883e; color: #f0883e; }
+.tag.blue   { border-color: #58a6ff; color: #58a6ff; }
+.tag.green  { border-color: #3fb950; color: #3fb950; }
+.tag.purple { border-color: #bc8cff; color: #bc8cff; }
+</style>
+</head>
+<body>
+
+<h1>&#x1F4CA; Dz5 ML &mdash; Визуализации <span class="badge">1st place · Kaggle 88.735</span></h1>
+<div class="sub">Интерактивные графики и дашборды по всем фазам проекта &mdash; 15 файлов &nbsp;|&nbsp; <a href="README.md" style="color:#58a6ff;text-decoration:none">&#x1F4C4; README.md</a></div>
+
+<!-- ── КЛЮЧЕВЫЕ ИТОГИ ── -->
+<div class="section">
+  <div class="section-title">&#x2B50; Ключевые итоги</div>
+  <div class="grid">
+
+    <a class="card" href="discoveries_timeline.html" target="_blank">
+      <div class="card-title">Хронология открытий</div>
+      <div class="card-desc">10 ключевых открытий от sin(θ) до итеративного ансамбля.
+        Формулы, алгоритмы, RMSE-чипы на каждом шаге.</div>
+      <div class="card-meta"><span class="tag orange">история</span> 21 KB</div>
+    </a>
+
+    <a class="card" href="score_timeline.html" target="_blank">
+      <div class="card-title">Score Progression — все фазы</div>
+      <div class="card-desc">3 панели: R² до формулы → RMSE формулы → OOF RMSE
+        ансамбля BigPC. От R²≈0 до Kaggle 88.735.</div>
+      <div class="card-meta"><span class="tag green">метрики</span> 9 KB</div>
+    </a>
+
+    <a class="card" href="formula_terms.html" target="_blank">
+      <div class="card-title">Слагаемые Formula V2</div>
+      <div class="card-desc">F<sub>v</sub>(μ), H<sub>v</sub>(μ), sin(k₁θ),
+        g<sub>θ</sub>(θ), C(θ), G<sub>clip</sub> — 6 панелей, 44 параметра.</div>
+      <div class="card-meta"><span class="tag blue">формула</span> 239 KB</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- ── ИНТЕРАКТИВНЫЕ 3D-ФОРМУЛЫ ── -->
+<div class="section">
+  <div class="section-title">&#x1F9EE; Интерактивные 3D-поверхности Formula V2</div>
+  <div class="grid">
+
+    <a class="card" href="formula_realtime.html" target="_blank">
+      <div class="card-title">Все три поверхности — единые ползунки</div>
+      <div class="card-desc">3 ползунка (μ, θ, tc) управляют всеми тремя поверхностями
+        одновременно. Сетка 150×150, вычисляется на лету в JS.</div>
+      <div class="card-meta"><span class="tag blue">3D · реалтайм</span> 15 KB</div>
+    </a>
+
+    <a class="card" href="formula_mu_theta.html" target="_blank">
+      <div class="card-title">y(μ, θ) — ползунок tc</div>
+      <div class="card-desc">3D-поверхность с ползунком для фиксированного tc.
+        Сетка 150×150.</div>
+      <div class="card-meta"><span class="tag blue">3D · реалтайм</span> 9 KB</div>
+    </a>
+
+    <a class="card" href="formula_mu_tc.html" target="_blank">
+      <div class="card-title">y(μ, tc) — ползунок θ</div>
+      <div class="card-desc">Зависимость от muon_flux и track_curvature
+        при фиксированном cerenkov_angle.</div>
+      <div class="card-meta"><span class="tag blue">3D · реалтайм</span> 9 KB</div>
+    </a>
+
+    <a class="card" href="formula_theta_tc.html" target="_blank">
+      <div class="card-title">y(θ, tc) — ползунок μ</div>
+      <div class="card-desc">Зависимость от cerenkov_angle и track_curvature
+        при фиксированном muon_flux.</div>
+      <div class="card-meta"><span class="tag blue">3D · реалтайм</span> 9 KB</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- ── SHAP ── -->
+<div class="section">
+  <div class="section-title">&#x1F9E0; SHAP и объяснимость</div>
+  <div class="grid">
+
+    <a class="card" href="shap_beeswarm.html" target="_blank">
+      <div class="card-title">SHAP Beeswarm</div>
+      <div class="card-desc">Вклад каждой фичи по всем строкам.
+        muon_flux и cerenkov_angle — главные предикторы.</div>
+      <div class="card-meta"><span class="tag purple">SHAP</span> 21 656 KB</div>
+    </a>
+
+    <a class="card" href="shap_scatter.html" target="_blank">
+      <div class="card-title">SHAP Scatter Dashboard</div>
+      <div class="card-desc">SHAP-значения против значений фичей.
+        Нелинейности и взаимодействия между переменными.</div>
+      <div class="card-meta"><span class="tag purple">SHAP</span> 22 380 KB</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- ── ДАННЫЕ ── -->
+<div class="section">
+  <div class="section-title">&#x1F50D; Данные</div>
+  <div class="grid">
+
+    <a class="card" href="3d_data_raw.html" target="_blank">
+      <div class="card-title">3D: y vs angle × features</div>
+      <div class="card-desc">Plotly 3D scatter сырых данных.
+        Первый взгляд на структуру y(μ, θ) — локальность видна сразу.</div>
+      <div class="card-meta"><span class="tag green">данные</span> 9 472 KB</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- ── ГРАФИКИ ОТКРЫТИЙ ── -->
+<div class="section">
+  <div class="section-title">&#x1F4C8; Графики по ходу исследования</div>
+  <div class="grid">
+
+    <a class="card" href="plot_20a_y_mu_theta.html" target="_blank">
+      <div class="card-title">y(μ, θ) heatmap</div>
+      <div class="card-desc">2D срезы y по паре (μ, θ).
+        Первая визуализация структуры Breit-Wigner × sin.</div>
+      <div class="card-meta"><span class="tag orange">открытие</span> 5 263 KB</div>
+    </a>
+
+    <a class="card" href="plot_20b_y_vs_theta_slices.html" target="_blank">
+      <div class="card-title">y vs θ — срезы по μ</div>
+      <div class="card-desc">Синусоидальная зависимость θ при разных μ.
+        Подтверждение структуры sin(k₁θ).</div>
+      <div class="card-meta"><span class="tag orange">открытие</span> 4 834 KB</div>
+    </a>
+
+    <a class="card" href="plot_20c_y_vs_mu_slices.html" target="_blank">
+      <div class="card-title">y vs μ — срезы по θ</div>
+      <div class="card-desc">Breit-Wigner в μ при разных θ.
+        Извлечение амплитуды F(μ) из данных.</div>
+      <div class="card-meta"><span class="tag orange">открытие</span> 4 839 KB</div>
+    </a>
+
+    <a class="card" href="plot_21_theta_func.html" target="_blank">
+      <div class="card-title">g<sub>θ</sub>(θ) — структура</div>
+      <div class="card-desc">Форма g<sub>θ</sub>(θ): рациональная функция + Гауссиан.
+        Асимметрия ветвей θ&lt;0 и θ≥0.</div>
+      <div class="card-meta"><span class="tag orange">открытие</span> 5 289 KB</div>
+    </a>
+
+    <a class="card" href="plot_3d_residuals.html" target="_blank">
+      <div class="card-title">3D Residuals после формулы</div>
+      <div class="card-desc">Остатки (y − Formula V2) в 3D.
+        Что LGBM должен исправить — структура в зонах высокого |tc|.</div>
+      <div class="card-meta"><span class="tag orange">открытие</span> 5 259 KB</div>
+    </a>
+
+  </div>
+</div>
+
+</body>
+</html>
